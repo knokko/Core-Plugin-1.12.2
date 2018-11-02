@@ -1,6 +1,6 @@
 name: KnokkoCore
 main: nl.knokko.core.plugin.CorePlugin
-version: 1.0
+version: 1.1
 commands:
   itemattribute:
     description: Test command for item attributes

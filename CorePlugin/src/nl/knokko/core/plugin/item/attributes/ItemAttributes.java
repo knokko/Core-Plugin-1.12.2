@@ -12,6 +12,8 @@ import net.minecraft.server.v1_12_R1.NBTTagString;
 
 public class ItemAttributes {
 	
+	private static long uniqueCounter;
+	
 	public static ItemStack setAttribute(ItemStack original, String attribute, double value, String slot) {
 		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
 		NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
@@ -92,7 +94,7 @@ public class ItemAttributes {
 		damage.set("Amount", new NBTTagDouble(value));
 		damage.set("Operation", new NBTTagInt(0));
 		damage.set("UUIDLeast", new NBTTagLong(System.currentTimeMillis()));
-		damage.set("UUIDMost", new NBTTagLong(System.nanoTime()));
+		damage.set("UUIDMost", new NBTTagLong(uniqueCounter++));
 		damage.set("Slot", new NBTTagString(slot));
 		modifiers.add(damage);
 	}
