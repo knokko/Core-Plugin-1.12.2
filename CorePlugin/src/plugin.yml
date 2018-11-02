@@ -1,0 +1,8 @@
+name: KnokkoCore
+main: nl.knokko.core.plugin.CorePlugin
+version: 1.0
+commands:
+  itemattribute:
+    description: Test command for item attributes
+    useage: /itemattribute get/set/clear/reset/list ...
+    aliases: [ia, itemattributes]
