@@ -30,7 +30,7 @@ public class CommandItemAttribute implements CommandExecutor {
 									String slot = "mainhand";
 									if (args.length >= 4)
 										slot = args[3];
-									player.getInventory().setItemInMainHand(ItemAttributes.setAttribute(item, args[1], value, slot));
+									player.getInventory().setItemInMainHand(ItemAttributes.setAttribute(item, args[1], value, slot, 0));
 								} catch (NumberFormatException nfe) {
 									player.sendMessage("'" + args[2] + "' should be a number");
 								}

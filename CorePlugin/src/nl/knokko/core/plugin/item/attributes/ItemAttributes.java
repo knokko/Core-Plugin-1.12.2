@@ -14,13 +14,42 @@ public class ItemAttributes {
 	
 	private static long uniqueCounter;
 	
-	public static ItemStack setAttribute(ItemStack original, String attribute, double value, String slot) {
+	public static class Single {
+		
+		private final String attribute;
+		private final String slot;
+		private final int operation;
+		
+		private final double value;
+		
+		public Single(String attribute, String slot, int operation, double value) {
+			this.attribute = attribute;
+			this.slot = slot;
+			this.operation = operation;
+			this.value = value;
+		}
+	}
+	
+	public static ItemStack setAttributes(ItemStack original, Single...attributes) {
 		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
 		NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
 		NBTTagList modifiers = compound.getList("AttributeModifiers", 10);
 		if (modifiers == null)
 			modifiers = new NBTTagList();
-		setAttribute(modifiers, attribute, value, slot);
+		for (Single attribute : attributes)
+			setAttribute(modifiers, attribute.attribute, attribute.value, attribute.slot, attribute.operation);
+		compound.set("AttributeModifiers", modifiers);
+		nmsStack.setTag(compound);
+		return CraftItemStack.asBukkitCopy(nmsStack);
+	}
+	
+	public static ItemStack setAttribute(ItemStack original, String attribute, double value, String slot, int operation) {
+		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
+		NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
+		NBTTagList modifiers = compound.getList("AttributeModifiers", 10);
+		if (modifiers == null)
+			modifiers = new NBTTagList();
+		setAttribute(modifiers, attribute, value, slot, operation);
 		compound.set("AttributeModifiers", modifiers);
 		nmsStack.setTag(compound);
 		return CraftItemStack.asBukkitCopy(nmsStack);
@@ -48,7 +77,7 @@ public class ItemAttributes {
 		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
 		NBTTagCompound compound = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
 		NBTTagList modifiers = new NBTTagList();
-		setAttribute(modifiers, "dummy", 0, "dummyslot");
+		setAttribute(modifiers, "dummy", 0, "dummyslot", 0);
 		compound.set("AttributeModifiers", modifiers);
 		nmsStack.setTag(compound);
 		return CraftItemStack.asBukkitCopy(nmsStack);
@@ -87,12 +116,12 @@ public class ItemAttributes {
 			return null;
 	}
 	
-	private static void setAttribute(NBTTagList modifiers, String name, double value, String slot){
+	private static void setAttribute(NBTTagList modifiers, String name, double value, String slot, int operation){
 		NBTTagCompound damage = new NBTTagCompound();
 		damage.set("AttributeName", new NBTTagString(name));
 		damage.set("Name", new NBTTagString(name));
 		damage.set("Amount", new NBTTagDouble(value));
-		damage.set("Operation", new NBTTagInt(0));
+		damage.set("Operation", new NBTTagInt(operation));
 		damage.set("UUIDLeast", new NBTTagLong(System.currentTimeMillis()));
 		damage.set("UUIDMost", new NBTTagLong(uniqueCounter++));
 		damage.set("Slot", new NBTTagString(slot));
