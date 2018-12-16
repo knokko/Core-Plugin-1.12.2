@@ -30,6 +30,36 @@ public class ItemAttributes {
 		}
 	}
 	
+	public static class Slot {
+		
+		public static final String MAIN_HAND = "mainhand";
+		public static final String OFF_HAND = "offhand";
+		
+		public static final String HELMET = "head";
+		public static final String CHESTPLATE = "chest";
+		public static final String LEGGINGS = "legs";
+		public static final String BOOTS = "feet";
+	}
+	
+	public static class Operation {
+		
+		public static final int ADD = 0;
+		public static final int MULTIPLY = 1;
+		public static final int CHAIN_MULTIPLY = 2;
+	}
+	
+	public static class Attributes {
+		
+		public static final String ATTACK_DAMAGE = "generic.attackDamage";
+		public static final String ATTACK_SPEED = "generic.attackSpeed";
+		public static final String MAX_HEALTH = "generic.maxHealth";
+		public static final String MOVEMENT_SPEED = "generic.movementSpeed";
+		public static final String KNOCKBACK_RESISTANCE = "generic.knockbackResistance";
+		public static final String LUCK = "generic.luck";
+		public static final String ARMOR = "generic.armor";
+		public static final String ARMOR_TOUGHNESS = "generic.armorToughness";
+	}
+	
 	public static ItemStack setAttributes(ItemStack original, Single...attributes) {
 		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
 		NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
