@@ -19,4 +19,13 @@ public class ItemHelper {
 		net.minecraft.server.v1_12_R1.ItemStack nms = CraftItemStack.asNMSCopy(stack);
 		return nms.getName();
 	}
+	
+	public static String getTagAsString(ItemStack stack) {
+		net.minecraft.server.v1_12_R1.ItemStack nms = CraftItemStack.asNMSCopy(stack);
+		if (nms.hasTag()) {
+			return nms.getTag().toString();
+		} else {
+			return "No NBT";
+		}
+	}
 }

@@ -22,6 +22,7 @@ public class CommandKnokkoCore implements CommandExecutor {
 	private CommandItemAttribute itemAttribute = new CommandItemAttribute();
 	private CommandItemName itemName = new CommandItemName();
 	private CommandTest test = new CommandTest();
+	private CommandItemTag tag = new CommandItemTag();
 	
 	private void sendUseage(CommandSender sender) {
 		sender.sendMessage(ChatColor.YELLOW + "You should use /knokkocore itemattribute/itemname/test");
@@ -38,6 +39,8 @@ public class CommandKnokkoCore implements CommandExecutor {
 					itemName.onCommand(sender, command, args[0], subArgs);
 				else if (args[0].equals("test"))
 					test.onCommand(sender, command, args[0], subArgs);
+				else if (args[0].equals("tag"))
+					tag.onCommand(sender, command, label, subArgs);
 				else
 					sendUseage(sender);
 			} else {
