@@ -1,5 +1,6 @@
 package nl.knokko.core.plugin.item.attributes;
 
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,8 +12,6 @@ import net.minecraft.server.v1_12_R1.NBTTagLong;
 import net.minecraft.server.v1_12_R1.NBTTagString;
 
 public class ItemAttributes {
-	
-	private static long uniqueCounter;
 	
 	public static class Single {
 		
@@ -58,6 +57,20 @@ public class ItemAttributes {
 		public static final String LUCK = "generic.luck";
 		public static final String ARMOR = "generic.armor";
 		public static final String ARMOR_TOUGHNESS = "generic.armorToughness";
+	}
+	
+	public static ItemStack createWithAttributes(Material type, int amount, Single...attributes) {
+		ItemStack original = new ItemStack(type, amount);
+		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
+		NBTTagCompound compound = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
+		NBTTagList modifiers = new NBTTagList();
+		if (attributes.length == 0)
+			setAttribute(modifiers, "dummy", 0, "dummyslot", 0);
+		for (Single attribute : attributes)
+			setAttribute(modifiers, attribute.attribute, attribute.value, attribute.slot, attribute.operation);
+		compound.set("AttributeModifiers", modifiers);
+		nmsStack.setTag(compound);
+		return CraftItemStack.asCraftMirror(nmsStack);
 	}
 	
 	public static ItemStack setAttributes(ItemStack original, Single...attributes) {
@@ -152,8 +165,8 @@ public class ItemAttributes {
 		damage.set("Name", new NBTTagString(name));
 		damage.set("Amount", new NBTTagDouble(value));
 		damage.set("Operation", new NBTTagInt(operation));
-		damage.set("UUIDLeast", new NBTTagLong(System.currentTimeMillis()));
-		damage.set("UUIDMost", new NBTTagLong(uniqueCounter++));
+		damage.set("UUIDLeast", new NBTTagLong(modifiers.size() + 1));
+		damage.set("UUIDMost", new NBTTagLong(modifiers.size() + 1));
 		damage.set("Slot", new NBTTagString(slot));
 		modifiers.add(damage);
 	}
