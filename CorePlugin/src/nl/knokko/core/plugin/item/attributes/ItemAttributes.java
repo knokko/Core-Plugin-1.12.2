@@ -188,8 +188,12 @@ public class ItemAttributes {
 		damage.set("Name", new NBTTagString(name));
 		damage.set("Amount", new NBTTagDouble(value));
 		damage.set("Operation", new NBTTagInt(operation));
-		damage.set("UUIDLeast", new NBTTagLong(modifiers.size() + 1));
-		damage.set("UUIDMost", new NBTTagLong(modifiers.size() + 1));
+		long most = modifiers.size() + 1 + slot.hashCode() * name.hashCode();
+		long least = modifiers.size() + 1 + slot.hashCode() + name.hashCode();
+		if (most == 0) most = -8;
+		if (least == 0) least = 12;
+		damage.set("UUIDLeast", new NBTTagLong(least));
+		damage.set("UUIDMost", new NBTTagLong(most));
 		damage.set("Slot", new NBTTagString(slot));
 		modifiers.add(damage);
 	}
