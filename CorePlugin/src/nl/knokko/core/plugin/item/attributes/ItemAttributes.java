@@ -82,6 +82,10 @@ public class ItemAttributes {
 		public static final String ARMOR_TOUGHNESS = "generic.armorToughness";
 	}
 	
+	public static ItemStack createWithAttributes(String materialName, int amount, Single...attributes) {
+		return createWithAttributes(Material.getMaterial(materialName), amount, attributes);
+	}
+	
 	public static ItemStack createWithAttributes(Material type, int amount, Single...attributes) {
 		ItemStack original = new ItemStack(type, amount);
 		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
