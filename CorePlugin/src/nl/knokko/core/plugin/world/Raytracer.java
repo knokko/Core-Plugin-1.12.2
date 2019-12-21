@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_12_R1.AxisAlignedBB;
+import net.minecraft.server.v1_12_R1.EntityItem;
 import net.minecraft.server.v1_12_R1.MovingObjectPosition;
 import net.minecraft.server.v1_12_R1.Vec3D;
 import net.minecraft.server.v1_12_R1.WorldServer;
@@ -24,6 +25,9 @@ public class Raytracer {
 	 * <p>If an intersection with any block or entity was found, a RaytraceResult representing the intersection
 	 * that is closest to {@code startLocation} will be returned. If no such intersection was found, this 
 	 * method will return null.</p>
+	 * 
+	 * <p>Entities included in {@code entitiesToExclude} and dropped item entities will be ignored by
+	 * the raytrace.</p>
 	 * 
 	 * @param startLocation The location from which the raytrace will start
 	 * @param vector The direction and maximum distance of the raytrace
@@ -61,6 +65,10 @@ public class Raytracer {
 		
 		entityListLoop:
 		for (net.minecraft.server.v1_12_R1.Entity nmsEntity : nmsEntityList) {
+			
+			// It's currently convenient to ignore dropped items
+			if (nmsEntity instanceof EntityItem)
+				continue entityListLoop;
 			
 			// Since the entities in entitiesToExclude could be null, it's important to call equals() on craftEntity
 			CraftEntity craftEntity = nmsEntity.getBukkitEntity();
