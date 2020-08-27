@@ -48,6 +48,10 @@ public class ItemHelper {
 		return block.getType().name();
 	}
 	
+	public static boolean isMaterialSolid(Block block) {
+		return block.getType().isSolid();
+	}
+	
 	public static String getMaterialName(ItemStack stack) {
 		return stack.getType().name();
 	}
