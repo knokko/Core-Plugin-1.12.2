@@ -41,8 +41,6 @@ public class CommandItemTag implements CommandExecutor {
 			ItemStack item = player.getInventory().getItemInMainHand();
 			if (item != null) {
 				sender.sendMessage(ChatColor.DARK_GREEN + ItemHelper.getTagAsString(item));
-				sender.sendMessage(ChatColor.BLUE + "And toString() returns:");
-				sender.sendMessage(ChatColor.YELLOW + item.toString());
 			} else {
 				sender.sendMessage("Hold the item to examine in your main hand");
 			}
