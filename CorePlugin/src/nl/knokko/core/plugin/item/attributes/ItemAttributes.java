@@ -50,6 +50,39 @@ public class ItemAttributes {
 			this.operation = operation;
 			this.value = value;
 		}
+		
+		public String getAttribute() {
+			return attribute;
+		}
+		
+		public String getSlot() {
+			return slot;
+		}
+		
+		public int getOperation() {
+			return operation;
+		}
+		
+		public double getValue() {
+			return value;
+		}
+		
+		@Override
+		public String toString() {
+			return "ItemAttributes.Single(" + attribute + "," + slot + "," 
+					+ operation + "," + value + ")";
+		}
+		
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof Single) {
+				Single single = (Single) other;
+				return single.attribute.equals(attribute) && single.slot.equals(slot)
+						&& single.operation == operation && single.value == value;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	public static class Slot {
@@ -98,6 +131,20 @@ public class ItemAttributes {
 		compound.set("AttributeModifiers", modifiers);
 		nmsStack.setTag(compound);
 		return CraftItemStack.asCraftMirror(nmsStack);
+	}
+	
+	public static ItemStack replaceAttributes(ItemStack original, Single...attributes) {
+		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(original);
+		NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
+		NBTTagList modifiers = new NBTTagList();
+		for (Single attribute : attributes)
+			setAttribute(modifiers, attribute.attribute, attribute.value, attribute.slot, attribute.operation);
+		if (attributes.length == 0) {
+			setAttribute(modifiers, "dummy", 0, "dummyslot", 0);
+		}
+		compound.set("AttributeModifiers", modifiers);
+		nmsStack.setTag(compound);
+		return CraftItemStack.asBukkitCopy(nmsStack);
 	}
 	
 	public static ItemStack setAttributes(ItemStack original, Single...attributes) {
@@ -184,6 +231,30 @@ public class ItemAttributes {
 				return null;
 		} else
 			return null;
+	}
+	
+	public static Single[] getAttributes(ItemStack stack) {
+		net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+		if (nmsStack.hasTag()) {
+			NBTTagCompound compound = nmsStack.getTag();
+			NBTTagList modifiers = compound.getList("AttributeModifiers", 10);
+			if (modifiers != null) {
+				Single[] attributes = new Single[modifiers.size()];
+				for (int index = 0; index < modifiers.size(); index++) {
+					NBTTagCompound attributeTag = modifiers.get(index);
+					String attribute = attributeTag.getString("Name");
+					String slot = attributeTag.getString("Slot");
+					int operation = attributeTag.getInt("Operation");
+					double amount = attributeTag.getDouble("Amount");
+					attributes[index] = new Single(attribute, slot, operation, amount);
+				}
+				return attributes;
+			} else {
+				return new Single[0];
+			}
+		} else {
+			return new Single[0];
+		}
 	}
 	
 	private static void setAttribute(NBTTagList modifiers, String name, double value, String slot, int operation){
