@@ -51,20 +51,8 @@ public class ItemAttributes {
 			this.value = value;
 		}
 		
-		public String getAttribute() {
-			return attribute;
-		}
-		
-		public String getSlot() {
-			return slot;
-		}
-		
-		public int getOperation() {
-			return operation;
-		}
-		
-		public double getValue() {
-			return value;
+		public boolean isDummy() {
+			return operation == 0 && value == 0;
 		}
 		
 		@Override
