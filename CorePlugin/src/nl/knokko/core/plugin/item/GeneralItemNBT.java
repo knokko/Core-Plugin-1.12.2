@@ -21,8 +21,11 @@ public class GeneralItemNBT {
 	
 	private GeneralItemNBT(net.minecraft.server.v1_12_R1.ItemStack nmsStack, boolean canWrite) {
 		this.nmsStack = nmsStack;
-		this.tag = nmsStack.getTag();
+		this.tag = nmsStack != null ? nmsStack.getTag() : null;
 		this.canWrite = canWrite;
+		if (nmsStack == null && canWrite) {
+			throw new IllegalArgumentException("Can't write to nbt of a null item stack");
+		}
 	}
 	
 	public ItemStack backToBukkit() {
