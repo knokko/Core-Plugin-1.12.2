@@ -17,8 +17,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import nl.knokko.core.plugin.CorePlugin;
+import nl.knokko.core.plugin.item.GeneralItemNBT;
 import nl.knokko.core.plugin.menu.Menu;
 
 public class CommandTest implements CommandExecutor {
@@ -39,12 +40,35 @@ public class CommandTest implements CommandExecutor {
 			player.closeInventory();
 		}, "Shoot a fireball", "in the direction", "you are facing");
 	}
+	
+	private static final String[] KEY1 = {"single"};
+	private static final String[] KEY2 = {"parent", "child"};
+	private static final String[] KEY3 = {"root", "node", "leaf"};
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			CorePlugin.getInstance().getMenuHandler().openMenu(((Player) sender), testMenu);
-			sender.sendMessage("Open the test menu");
+			//CorePlugin.getInstance().getMenuHandler().openMenu(((Player) sender), testMenu);
+			//sender.sendMessage("Open the test menu");
+			
+			Player player = (Player) sender;
+			ItemStack mainItem = player.getInventory().getItemInMainHand();
+			GeneralItemNBT nbt = GeneralItemNBT.readWriteInstance(mainItem);
+			sender.sendMessage("This should be 5: " + nbt.getOrDefault(KEY1, 5));
+			sender.sendMessage("This should be hello: " + nbt.getOrDefault(KEY2, "hello"));
+			sender.sendMessage("This should be world: " + nbt.getOrDefault(KEY3, "world"));
+			
+			nbt.set(KEY1, "key1");
+			nbt.set(KEY2, 2);
+			nbt.set(KEY3, 3);
+			
+			player.getInventory().setItemInMainHand(nbt.backToBukkit());
+			mainItem = player.getInventory().getItemInMainHand();
+			nbt = GeneralItemNBT.readOnlyInstance(mainItem);
+			
+			sender.sendMessage("This should be key1: " + nbt.getOrDefault(KEY1, "whoops"));
+			sender.sendMessage("This should be 2: " + nbt.getOrDefault(KEY2, 8));
+			sender.sendMessage("This should be 3: " + nbt.getOrDefault(KEY3, 9));
 		} else {
 			sender.sendMessage("This command is for players");
 		}
