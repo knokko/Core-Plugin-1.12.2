@@ -49,9 +49,10 @@ public class Raytracer {
 		Vec3D intersectionPos = null;
 		
 		// The block raytrace
-		MovingObjectPosition rayResult = nmsWorld.rayTrace(rayStart, velocityVec, true, true, false);
+		MovingObjectPosition rayResult = nmsWorld.rayTrace(rayStart, rayEnd, true, true, false);
 		if (rayResult != null && rayResult.type == EnumMovingObjectType.BLOCK) {
 			double blockDistanceSq = rayResult.pos.distanceSquared(rayStart);
+			
 			if (blockDistanceSq < vector.lengthSquared()) {
 				intersectionPos = rayResult.pos;
 				nearestDistanceSq = blockDistanceSq;
